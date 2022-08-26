@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32819.101
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{11A8DD76-328B-46DF-9F39-F559912D0360}") = "nanoFramework.GiantGecko.Adc", "nanoFramework.GiantGecko.Adc\nanoFramework.GiantGecko.Adc.nfproj", "{6E03C0B9-08D4-4EDF-8121-A1CB9491D301}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8F32DE5C-2A29-40AA-8D8A-2EDA6ADE12C5}"
+	ProjectSection(SolutionItems) = preProject
+		nanoFramework.GiantGecko.Adc.nuspec = nanoFramework.GiantGecko.Adc.nuspec
+		README.md = README.md
+		version.json = version.json
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6E03C0B9-08D4-4EDF-8121-A1CB9491D301}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E03C0B9-08D4-4EDF-8121-A1CB9491D301}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E03C0B9-08D4-4EDF-8121-A1CB9491D301}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{6E03C0B9-08D4-4EDF-8121-A1CB9491D301}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E03C0B9-08D4-4EDF-8121-A1CB9491D301}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E03C0B9-08D4-4EDF-8121-A1CB9491D301}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {04969E2A-21D6-4DD2-94FC-D54AB1420788}
+	EndGlobalSection
+EndGlobal
