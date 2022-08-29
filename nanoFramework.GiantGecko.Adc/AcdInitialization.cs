@@ -6,16 +6,16 @@
 namespace nanoFramework.GiantGecko.Adc
 {
     /// <summary>
-    /// ADC initialization structure, common for single conversion and scan sequence.
+    /// ADC initialization configuration, common for single conversion and scan sequence.
     /// </summary>
-    public struct AcdInitialization
+    public class AcdInitialization
     {
-        private OversampleRate _oversampleRate;
-        private LowpassFilterMode _lowpassFilterMode;
-        private WarmUpMode _warmUpMode;
-        private uint _warnupTimeBase;
-        private uint _prescale;
-        private bool _tailgating;
+        private OversampleRate _oversampleRate = OversampleRate._2Samples;
+        private LowpassFilterMode _lowpassFilterMode = LowpassFilterMode.Bypass;
+        private WarmUpMode _warmUpMode = WarmUpMode.Normal;
+        private uint _warnupTimeBase = 1;
+        private uint _prescale = 0;
+        private bool _tailgating = false;
 
         /// <summary>
         /// Oversampling rate select.

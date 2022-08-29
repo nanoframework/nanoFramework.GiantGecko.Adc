@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AcdInitialization.cs" />
+    <Compile Include="AdcController.cs" />
     <Compile Include="InputOption.cs" />
     <Compile Include="PrsSampleTrigger.cs" />
     <Compile Include="WarmUpMode.cs" />
