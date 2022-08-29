@@ -43,7 +43,6 @@
   <ItemGroup>
     <Compile Include="AcdInitialization.cs" />
     <Compile Include="InputOption.cs" />
-    <Compile Include="ScanSequenceInitialization.cs" />
     <Compile Include="PrsSampleTrigger.cs" />
     <Compile Include="WarmUpMode.cs" />
     <Compile Include="SampleResolution.cs" />
