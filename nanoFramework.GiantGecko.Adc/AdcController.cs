@@ -92,6 +92,17 @@ namespace nanoFramework.GiantGecko.Adc
         public AcdInitialization AcdInitialization => _acdInitialization;
 
         /// <summary>
+        /// Gets an array with the last conversions from an ongoing scan operation.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">The ADC is not performing a scan operation. This as to be started with a call to <see cref="StartContinuousConversion"/> or <see cref="StartAveragedContinuousConversion"/>.</exception>
+        /// <remarks>The values are either the last conversion or the average of the last conversion count, if the averaged continuous scan was started with <see cref="StartAveragedContinuousConversion"/>.</remarks>
+        public int[] LastConversion 
+        {
+            [MethodImpl(MethodImplOptions.InternalCall)]
+            get;
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="AdcController"/> class. 
         /// </summary>
         /// <returns>
@@ -144,7 +155,7 @@ namespace nanoFramework.GiantGecko.Adc
         }
 
         /// <summary>
-        /// Get a single conversion result.
+        /// Get a single conversion result from an ADC channel.
         /// </summary>
         /// <returns>Single conversion data.</returns>
         /// <remarks>
@@ -160,13 +171,28 @@ namespace nanoFramework.GiantGecko.Adc
         /// For ADC architectures with the ADCn->SCANINPUTSEL register, use ScanSingleEndedInputAdd() to configure single-ended scan inputs or ScanDifferentialInputAdd() to configure differential scan inputs. ADC_ScanInputClear() is also provided for applications that need to update the input configuration.
         /// </para>
         /// </remarks>
+        public int GetConversion(int channel)
+        {
+            return GetAveragedConversion(channel, 1);
+        }
+
+        /// <summary>
+        /// Get an array of conversion results from an ADC channel.
+        /// </summary>
+        /// <param name="channel"></param>
+        /// <param name="count"></param>
+        /// <returns>Average of the number of conversions taken.</returns>
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern uint GetSingleConversion();
+        public extern int GetAveragedConversion(int channel, int count);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern bool StartContinuousConversion();
 
-        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern bool StartAveragedContinuousConversion(int count);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern void StoptContinuousConversion();
 
         #region Native Calls
 
