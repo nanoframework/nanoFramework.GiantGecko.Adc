@@ -42,8 +42,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AcdInitialization.cs" />
+    <Compile Include="AdcChannel.cs" />
+    <Compile Include="AdcChannelBase.cs" />
+    <Compile Include="AdcChannelMode.cs" />
     <Compile Include="AdcController.cs" />
-    <Compile Include="InputOption.cs" />
+    <Compile Include="AdcControllerBase.cs" />
     <Compile Include="PrsSampleTrigger.cs" />
     <Compile Include="WarmUpMode.cs" />
     <Compile Include="SampleResolution.cs" />

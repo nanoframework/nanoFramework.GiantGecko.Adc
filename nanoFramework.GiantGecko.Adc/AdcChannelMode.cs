@@ -1,22 +1,21 @@
-﻿////
+﻿//
 // Copyright (c) .NET Foundation and Contributors
 // See LICENSE file in the project root for full license information.
-////
+//
 
-namespace nanoFramework.GiantGecko.Adc
+namespace System.Device.Adc
 {
     /// <summary>
-    /// Input option for ADC channel.
+    /// Describes the channel modes that the <see cref="AdcController"/> can use for input.
     /// </summary>
-    public enum InputOption
+    public enum AdcChannelMode
     {
         /// <summary>
-        /// Single-ended input.
+        /// Simple value of a particular pin.
         /// </summary>
-        SingleEnded,
-
+        SingleEnded = 0,
         /// <summary>
-        /// Input is differential.
+        /// Difference between two pins.
         /// </summary>
         Differential
     }

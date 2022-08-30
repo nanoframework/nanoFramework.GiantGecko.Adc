@@ -4,6 +4,7 @@
 ////
 
 using System;
+using System.Device.Adc;
 using System.Runtime.CompilerServices;
 
 namespace nanoFramework.GiantGecko.Adc
@@ -15,7 +16,7 @@ namespace nanoFramework.GiantGecko.Adc
     /// This class implements specifics of the Silabs Giant Gecko ADC.
     /// It's meant to be used instead of the standard System.Adc.
     /// </remarks>
-    public class AdcController
+    public class AdcController : AdcControllerBase
     {
         // this is used as the lock object 
         // a lock is required because multiple threads can access the AdcController
@@ -27,9 +28,55 @@ namespace nanoFramework.GiantGecko.Adc
         private ReferenceVoltage _referenceVoltage;
         private SampleResolution _sampleResolution;
         private uint _scanInput;
-        private InputOption _inputOption;
+        private AdcChannelMode _channelMode = AdcChannelMode.SingleEnded;
         private bool _prsEnable;
         private readonly AcdInitialization _acdInitialization;
+        private bool _continuousConvertionstarted;
+
+        /// <inheritdoc/>
+        public override int ChannelCount
+        {
+            get
+            {
+                return NativeGetChannelCount();
+            }
+        }
+
+        /// <inheritdoc/>
+        public override AdcChannelMode ChannelMode { get => _channelMode; set => _channelMode = value; }
+
+        /// <inheritdoc/>
+        public override int MaxValue
+        {
+            get
+            {
+                return NativeGetMaxValue();
+            }
+        }
+
+        /// <inheritdoc/>
+        public override int MinValue
+        {
+            get
+            {
+                return NativeGetMinValue();
+            }
+        }
+
+        /// <inheritdoc/>
+        public override int ResolutionInBits
+        {
+            get
+            {
+                return NativeGetResolutionInBits();
+            }
+        }
+
+        /// <inheritdoc/>
+        public override bool IsChannelModeSupported(AdcChannelMode channelMode)
+        {
+            return NativeIsChannelModeSupported((int)channelMode);
+        }
 
         /// <summary>
         /// Peripheral reflex system trigger selection.
@@ -49,7 +96,7 @@ namespace nanoFramework.GiantGecko.Adc
         /// </summary>
         /// <remarks>
         /// Note that, for external references, the ADC calibration register must be set explicitly.
-         /// </remarks>
+        /// </remarks>
         public ReferenceVoltage ReferenceVoltage { get => _referenceVoltage; set => _referenceVoltage = value; }
 
         /// <summary>
@@ -61,15 +108,10 @@ namespace nanoFramework.GiantGecko.Adc
         /// Scan input selection.
         /// </summary>
         /// <remarks>
-        /// <para>If <see cref="InputOption"/> is <see cref="InputOption.SingleEnded"/>, use logical combination of ADC_SCANCTRL_INPUTMASK_CHx defines.</para>
-        /// <para>If <see cref="InputOption"/> is <see cref="InputOption.Differential"/>, use logical combination of ADC_SCANCTRL_INPUTMASK_CHxCHy defines.</para>
+        /// <para>If <see cref="ChannelMode"/> is <see cref="AdcChannelMode.SingleEnded"/>, use logical combination of ADC_SCANCTRL_INPUTMASK_CHx defines.</para>
+        /// <para>If <see cref="ChannelMode"/> is <see cref="AdcChannelMode.Differential"/>, use logical combination of ADC_SCANCTRL_INPUTMASK_CHxCHy defines.</para>
         /// </remarks>
         public uint ScanInput { get => _scanInput; set => _scanInput = value; }
-
-        /// <summary>
-        /// Select if single-ended or differential input.
-        /// </summary>
-        public InputOption InputOption { get => _inputOption; set => _inputOption = value; }
 
         /// <summary>
         /// Peripheral reflex system trigger enable.
@@ -82,11 +124,6 @@ namespace nanoFramework.GiantGecko.Adc
         public bool LedfAdjust;
 
         /// <summary>
-        /// Select if continuous conversion until explicit stop.
-        /// </summary>
-        public bool ContinuousConversion;
-
-        /// <summary>
         /// Initialization configuration for <see cref="AdcController"/>.
         /// </summary>
         public AcdInitialization AcdInitialization => _acdInitialization;
@@ -96,7 +133,7 @@ namespace nanoFramework.GiantGecko.Adc
         /// </summary>
         /// <exception cref="InvalidOperationException">The ADC is not performing a scan operation. This as to be started with a call to <see cref="StartContinuousConversion"/> or <see cref="StartAveragedContinuousConversion"/>.</exception>
         /// <remarks>The values are either the last conversion or the average of the last conversion count, if the averaged continuous scan was started with <see cref="StartAveragedContinuousConversion"/>.</remarks>
-        public int[] LastConversion 
+        public int[] LastConversion
         {
             [MethodImpl(MethodImplOptions.InternalCall)]
             get;
@@ -154,50 +191,82 @@ namespace nanoFramework.GiantGecko.Adc
             }
         }
 
-        /// <summary>
-        /// Get a single conversion result from an ADC channel.
-        /// </summary>
-        /// <returns>Single conversion data.</returns>
-        /// <remarks>
-        /// <para>
-        /// Need to set various configuration properties before getting a conversion. If not, the default values will be used.
-        /// </para>
-        /// <para>
-        /// </para>
-        /// <para>
-        /// For other references, the calibration is updated with values defined during manufacturing. 
-        /// </para>
-        /// <para>
-        /// For ADC architectures with the ADCn->SCANINPUTSEL register, use ScanSingleEndedInputAdd() to configure single-ended scan inputs or ScanDifferentialInputAdd() to configure differential scan inputs. ADC_ScanInputClear() is also provided for applications that need to update the input configuration.
-        /// </para>
-        /// </remarks>
-        public int GetConversion(int channel)
+        /// <inheritdoc/>   
+        public override AdcChannel OpenChannel(Int32 channelNumber)
         {
-            return GetAveragedConversion(channel, 1);
+            NativeOpenChannel(channelNumber);
+
+            return new AdcChannel(this, channelNumber);
         }
 
-        /// <summary>
-        /// Get an array of conversion results from an ADC channel.
-        /// </summary>
-        /// <param name="channel"></param>
-        /// <param name="count"></param>
-        /// <returns>Average of the number of conversions taken.</returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern int GetAveragedConversion(int channel, int count);
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern bool StartContinuousConversion();
+        /// <summary>
+        /// Starts continuous conversions on the specified channels.
+        /// </summary>
+        /// <returns><see langword="true"/> if the operation was successful. <see langword="false"/> otherwise.</returns>
+        /// <exception cref="">If a previous continuous conversion operation has been started previously without being stopped.</exception>
+        public bool StartContinuousConversion()
+        {
+            if(_continuousConvertionstarted)
+            {
+                throw new InvalidOperationException();
+            }
+
+            // update flag
+            _continuousConvertionstarted = NativeStartContinuousConversion();
+
+            return _continuousConvertionstarted;
+        }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern bool StartAveragedContinuousConversion(int count);
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern void StoptContinuousConversion();
+        /// <summary>
+        /// Stops an ongoing continuous conversion scan operation.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">If there is no ongoing continuous conversion operation.</exception>
+        public void StoptContinuousConversion()
+        {
+            if(!_continuousConvertionstarted)
+            {
+                throw new InvalidOperationException();
+            }
+
+            NativeStoptContinuousConversion();
+
+            // update flag
+            _continuousConvertionstarted = false;
+
+        }
 
         #region Native Calls
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern void NativeInit();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern void NativeOpenChannel(Int32 channelNumber);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern int NativeGetChannelCount();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern int NativeGetMaxValue();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern int NativeGetMinValue();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern bool NativeIsChannelModeSupported(int mode);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern int NativeGetResolutionInBits();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern bool NativeStartContinuousConversion();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern bool NativeStoptContinuousConversion();
 
         #endregion
     }
