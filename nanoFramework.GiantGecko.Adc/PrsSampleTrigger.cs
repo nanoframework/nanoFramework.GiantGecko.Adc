@@ -13,9 +13,14 @@ namespace nanoFramework.GiantGecko.Adc
     public enum PrsSampleTrigger
     {
         /// <summary>
+        /// PRS trigger disabled.
+        /// </summary>
+        Disabled = -1,
+
+        /// <summary>
         /// PRS Channel 0.
         /// </summary>
-        PrsChannel0,
+        PrsChannel0 = 0,
 
         /// <summary>
         /// PRS Channel 1.
@@ -70,6 +75,6 @@ namespace nanoFramework.GiantGecko.Adc
         /// <summary>
         /// PRS Channel 11.
         /// </summary>
-        PrsChannel11,
+        PrsChannel11
     }
 }

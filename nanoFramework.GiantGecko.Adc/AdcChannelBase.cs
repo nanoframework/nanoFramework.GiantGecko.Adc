@@ -24,15 +24,13 @@ namespace System.Device.Adc
         public abstract int ReadValue();
 
         /// <summary>
-        /// Reads the value as a percentage of the max value possible for this controller.
+        /// Reads the averaged digital representation of <paramref name="count"/> analog values read from the ADC.
         /// </summary>
+        /// <param name="count">Number of samples to take for averaging.</param>
         /// <returns>
-        /// The value as percentage of the max value.
+        /// The digital value with the averaged value of <paramref name="count"/> samples.
         /// </returns>
-        public double ReadRatio()
-        {
-            return ReadValue() / (double)Controller.MaxValue;
-        }
+        public abstract int ReadValueAveraged(int count);
 
         /// <summary>
         /// Gets the AdcController for this channel.

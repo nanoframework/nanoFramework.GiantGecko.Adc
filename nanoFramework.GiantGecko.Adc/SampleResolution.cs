@@ -8,6 +8,7 @@ namespace nanoFramework.GiantGecko.Adc
     /// <summary>
     /// Sample resolution.
     /// </summary>
+    [System.Flags]
     public enum SampleResolution
     {
         /// <summary>

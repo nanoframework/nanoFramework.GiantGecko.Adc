@@ -13,17 +13,6 @@ namespace System.Device.Adc
     public abstract class AdcControllerBase
     {
         /// <summary>
-        /// Verifies that the specified channel mode is supported by the controller.
-        /// </summary>
-        /// <param name="channelMode">
-        /// The channel mode.
-        /// </param>
-        /// <returns>
-        /// True if the specified channel mode is supported, otherwise false.
-        /// </returns>
-        public abstract bool IsChannelModeSupported(AdcChannelMode channelMode);
-
-        /// <summary>
         /// Opens a connection to the specified ADC channel.
         /// </summary>
         /// <param name="channelNumber">
@@ -33,6 +22,17 @@ namespace System.Device.Adc
         /// The ADC channel.
         /// </returns>
         public abstract AdcChannel OpenChannel(int channelNumber);
+
+        /// <summary>
+        /// Opens a connection to the specified ADC channel with the specified configurations.
+        /// </summary>
+        /// <param name="channelNumber">
+        /// The channel to connect to.
+        /// </param>
+        /// <returns>
+        /// The ADC channel.
+        /// </returns>
+        public abstract AdcChannel OpenChannel(int channelNumber, AdcChannelConfiguration configuration);
 
         /// <summary>
         /// The number of channels available on the <see cref="AdcController"/>.
@@ -48,30 +48,24 @@ namespace System.Device.Adc
         /// <value>
         /// The mode for the <see cref="AdcChannel"/>.
         /// </value>
+        /// <exception cref="PlatformNotSupportedException">If the platform doesn't have this configuration available.</exception>
         public abstract AdcChannelMode ChannelMode { get; set; }
 
         /// <summary>
-        /// Gets the maximum value that the <see cref="AdcController"/> can report.
+        /// Gets the resolution(s) of the controller as number of bits it has. For example, if we have a 10-bit ADC, that means it can detect 1024 (2^10) discrete levels.
         /// </summary>
         /// <value>
-        /// The maximum value.
+        /// The number of bits the <see cref="AdcController"/> has support for.
         /// </value>
-        public abstract int MaxValue { get; }
+        public abstract SampleResolution SupportedResolutionsInBits { get; }
 
         /// <summary>
-        /// The minimum value the <see cref="AdcController"/> can report.
+        /// Gets or sets the resolution of the controller as number of bits it has.
         /// </summary>
         /// <value>
-        /// The minimum value.
+        /// The number of bits the <see cref="AdcController"/> will use to perform conversions.
         /// </value>
-        public abstract int MinValue { get; }
-
-        /// <summary>
-        /// Gets the resolution of the controller as number of bits it has. For example, if we have a 10-bit ADC, that means it can detect 1024 (2^10) discrete levels.
-        /// </summary>
-        /// <value>
-        /// The number of bits the <see cref="AdcController"/> has.
-        /// </value>
-        public abstract int ResolutionInBits { get; }
+        /// <exception cref="InvalidOperationException">If trying to change the resolution when a continuous conversion operation has been started.</exception>
+        public abstract SampleResolution ResolutionInBits { get; set; }
     }
 }

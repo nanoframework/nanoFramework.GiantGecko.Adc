@@ -20,15 +20,39 @@ namespace nanoFramework.GiantGecko.Adc
         private readonly object _syncLock;
 
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        private readonly int _channelNumber;
-
-        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
         private bool _disposed;
 
-        internal AdcChannel(AdcController controller, int channelNumber)
+#pragma warning disable IDE0052 // Need to be declared to become accessible from native code
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+        private readonly int _channelNumber;
+        private readonly AdcChannelConfiguration _adcChannelConfiguration;
+        private int _averageCount;
+#pragma warning restore IDE0052 // Remove unread private members
+
+        /// <summary>
+        /// Initialization configuration for <see cref="AdcChannel"/>.
+        /// </summary>
+        public AdcChannelConfiguration AdcChannelConfiguration => _adcChannelConfiguration;
+
+        internal AdcChannel(
+            AdcController controller,
+            int channelNumber)
         {
             _adcController = controller;
             _channelNumber = channelNumber;
+            _adcChannelConfiguration = default;
+
+            _syncLock = new object();
+        }
+
+        internal AdcChannel(
+            AdcController controller,
+            int channelNumber,
+            AdcChannelConfiguration acdInitialization)
+        {
+            _adcController = controller;
+            _channelNumber = channelNumber;
+            _adcChannelConfiguration = acdInitialization;
 
             _syncLock = new object();
         }
@@ -44,18 +68,15 @@ namespace nanoFramework.GiantGecko.Adc
                     throw new ObjectDisposedException();
                 }
 
+                // set average count to 1 for single sample
+                _averageCount = 1;
+
                 return NativeReadValue();
             }
         }
 
-        /// <summary>
-        /// Reads the averaged digital representation of <paramref name="count"/> analog values read from the ADC.
-        /// </summary>
-        /// <param name="count">Number of samples to take for averaging.</param>
-        /// <returns>
-        /// The digital value with the averaged value of <paramref name="count"/> samples.
-        /// </returns>
-        public int ReadValueAveraged(int count)
+        /// <inheritdoc/>
+        public override int ReadValueAveraged(int count)
         {
             lock (_syncLock)
             {
@@ -64,6 +85,8 @@ namespace nanoFramework.GiantGecko.Adc
                 {
                     throw new ObjectDisposedException();
                 }
+
+                _averageCount = count;
 
                 return NativeReadValue();
             }
