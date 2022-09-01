@@ -13,7 +13,7 @@ namespace nanoFramework.GiantGecko.Adc
     /// Represents an <see cref="AdcController"/> on the system.
     /// </summary>
     /// <remarks>
-    /// This class implements specifics of the Silabs Giant Gecko ADC.
+    /// This class implements specifics of the Silabs Giant Gecko EFM32 ADC.
     /// It's meant to be used instead of the standard System.Adc.
     /// </remarks>
     public class AdcController : AdcControllerBase
@@ -38,13 +38,6 @@ namespace nanoFramework.GiantGecko.Adc
         }
 
         /// <inheritdoc/>
-        public override AdcChannelMode ChannelMode
-        {
-            get => throw new PlatformNotSupportedException();
-            set => throw new PlatformNotSupportedException();
-        }
-
-        /// <inheritdoc/>
         public override SampleResolution SupportedResolutionsInBits
         {
             get
@@ -62,45 +55,28 @@ namespace nanoFramework.GiantGecko.Adc
         /// Gets an array with the last conversions from an ongoing scan operation.
         /// </summary>
         /// <exception cref="InvalidOperationException">The ADC is not performing a scan operation. This as to be started with a call to <see cref="StartContinuousConversion"/> or <see cref="StartAveragedContinuousConversion"/>.</exception>
-        /// <remarks>The values are either the last conversion or the average of the last conversion count, if the averaged continuous scan was started with <see cref="StartAveragedContinuousConversion"/>.</remarks>
-        public int[] LastConversion
+        /// <remarks>The values are either the last conversion (if started with <see cref="StartContinuousConversion"/>) or the average of the last conversion count (if the averaged continuous scan was started with <see cref="StartAveragedContinuousConversion"/>).</remarks>
+        public int[] LastScanConversions
         {
             [MethodImpl(MethodImplOptions.InternalCall)]
             get;
         }
 
-        /// <inheritdoc/>
-        public override SampleResolution ResolutionInBits
-        {
-            get => throw new PlatformNotSupportedException();
-            set => throw new PlatformNotSupportedException();
-        }
+        /// <summary>
+        /// Returns true if the ADC is currently running in scan mode, started via <see cref="StartContinuousConversion"/> or <see cref="StartAveragedContinuousConversion"/>.
+        /// </summary>
+        public bool IsScanRunning => throw new NotImplementedException();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AdcController"/> class. 
+        /// A default <see cref="AdcConfiguration"/> is used.
         /// </summary>
         /// <returns>
         /// The <see cref="AdcController"/> for the system.
         /// </returns>
         /// <exception cref="InvalidOperationException">If the <see cref="AdcController"/> has already been instantiated.</exception>
-        public AdcController()
+        public AdcController() : this(new AdcConfiguration())
         {
-            // check if this device is already opened
-            if (_syncLock == null)
-            {
-                _acdConfiguration = new AdcConfiguration();
-
-                // call native init to allow HAL/PAL inits related with ADC hardware
-                // this is also used to check if the requested ADC actually exists
-                NativeInit();
-
-                _syncLock = new object();
-            }
-            else
-            {
-                // this controller already exists: throw an exception
-                throw new InvalidOperationException();
-            }
         }
 
         /// <summary>
@@ -131,9 +107,7 @@ namespace nanoFramework.GiantGecko.Adc
         /// <inheritdoc/>   
         public override AdcChannel OpenChannel(int channelNumber)
         {
-            NativeOpenChannel(channelNumber);
-
-            return new AdcChannel(this, channelNumber);
+            return OpenChannel(channelNumber, new AdcChannelConfiguration());
         }
 
         /// <inheritdoc/>
@@ -172,9 +146,12 @@ namespace nanoFramework.GiantGecko.Adc
         /// <summary>
         /// Starts continuous conversions and average the digital representation of <paramref name="count"/> analog values read from the ADC.
         /// </summary>
+        /// <remarks>
+        /// In this mode, the last count samples are averaged and made available in LastScanConversion[0].
+        /// </remarks>
         /// <param name="channels">Array of channels to scan performing continuous conversions.</param>
         /// <param name="count">Number of samples to take for averaging.</param>
-        /// <returns></returns>
+        /// <returns>TODO</returns>
         /// <exception cref="InvalidOperationException"></exception>
         public bool StartAveragedContinuousConversion(AdcChannel[] channels, int count)
         {

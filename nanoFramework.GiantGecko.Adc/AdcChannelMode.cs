@@ -14,6 +14,7 @@ namespace System.Device.Adc
         /// Simple value of a particular pin.
         /// </summary>
         SingleEnded = 0,
+
         /// <summary>
         /// Difference between two pins.
         /// </summary>

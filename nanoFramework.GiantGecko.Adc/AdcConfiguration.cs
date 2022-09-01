@@ -6,7 +6,7 @@
 namespace nanoFramework.GiantGecko.Adc
 {
     /// <summary>
-    /// ADC configuration, common for single conversion and scan sequence.
+    /// ADC global configuration, common for single conversion and scan sequence.
     /// </summary>
     public class AdcConfiguration
     {
@@ -21,7 +21,8 @@ namespace nanoFramework.GiantGecko.Adc
         /// Oversampling rate select.
         /// </summary>
         /// <remarks>
-        /// To have any effect, oversampling must be enabled for single/scan mode.
+        /// To have any effect, oversampling must be enabled for single/scan mode when the
+        /// channel was opened/configred via <see cref="AdcChannelConfiguration.SampleResolution"/>.
         /// </remarks>
         public OversampleRate OversampleRate { get => _oversampleRate; set => _oversampleRate = value; }
 
