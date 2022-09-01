@@ -8,7 +8,7 @@ namespace nanoFramework.GiantGecko.Adc
     /// <summary>
     /// ADC initialization configuration, common for single conversion and scan sequence.
     /// </summary>
-    public class AcdInitialization
+    public class AdcInitialization
     {
         private OversampleRate _oversampleRate = OversampleRate._2Samples;
         private LowpassFilterMode _lowpassFilterMode = LowpassFilterMode.Bypass;

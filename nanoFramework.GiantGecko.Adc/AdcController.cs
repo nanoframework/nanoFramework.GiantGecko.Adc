@@ -30,7 +30,7 @@ namespace nanoFramework.GiantGecko.Adc
         private uint _scanInput;
         private AdcChannelMode _channelMode = AdcChannelMode.SingleEnded;
         private bool _prsEnable;
-        private readonly AcdInitialization _acdInitialization;
+        private readonly AdcInitialization _acdInitialization;
         private bool _continuousConvertionstarted;
 
         /// <inheritdoc/>
@@ -126,7 +126,7 @@ namespace nanoFramework.GiantGecko.Adc
         /// <summary>
         /// Initialization configuration for <see cref="AdcController"/>.
         /// </summary>
-        public AcdInitialization AcdInitialization => _acdInitialization;
+        public AdcInitialization AcdInitialization => _acdInitialization;
 
         /// <summary>
         /// Gets an array with the last conversions from an ongoing scan operation.
@@ -151,7 +151,7 @@ namespace nanoFramework.GiantGecko.Adc
             // check if this device is already opened
             if (_syncLock == null)
             {
-                _acdInitialization = new AcdInitialization();
+                _acdInitialization = new AdcInitialization();
 
                 // call native init to allow HAL/PAL inits related with ADC hardware
                 // this is also used to check if the requested ADC actually exists
@@ -171,7 +171,7 @@ namespace nanoFramework.GiantGecko.Adc
         /// </summary>
         /// <param name="acdInitialization">Initialization configuration for the <see cref="AdcController"/>.</param>
         /// <exception cref="InvalidOperationException">If the <see cref="AdcController"/> has already been instantiated.</exception>
-        public AdcController(AcdInitialization acdInitialization)
+        public AdcController(AdcInitialization acdInitialization)
         {
             // check if this device is already opened
             if (_syncLock == null)
