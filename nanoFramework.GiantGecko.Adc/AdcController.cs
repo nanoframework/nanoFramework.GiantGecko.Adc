@@ -125,11 +125,9 @@ namespace nanoFramework.GiantGecko.Adc
         /// <param name="channels">Array of channels to scan performing continuous sampling.</param>
         /// <returns><see langword="true"/> if the operation was successful. <see langword="false"/> otherwise.</returns>
         /// <exception cref="InvalidOperationException">If a previous continuous sampling operation has been started previously without being stopped.</exception>
+        public bool StartContinuousSampling(AdcChannel[] channels)
         {
-            if (_continuousConvertionstarted)
-            {
-                throw new InvalidOperationException();
-            }
+            CheckIfContinuousConversionIsStarted();
 
             _scanChannels = channels;
             // set average count to 1 for single sample
@@ -153,10 +151,7 @@ namespace nanoFramework.GiantGecko.Adc
         /// <exception cref="InvalidOperationException"></exception>
         public bool StartAveragedContinuousSampling(AdcChannel[] channels, int count)
         {
-            if (_continuousConvertionstarted)
-            {
-                throw new InvalidOperationException();
-            }
+            CheckIfContinuousConversionIsStarted();
 
             _scanChannels = channels;
             _averageCount = count;
@@ -173,16 +168,22 @@ namespace nanoFramework.GiantGecko.Adc
         /// <exception cref="InvalidOperationException">If there is no ongoing continuous sampling operation.</exception>
         public void StopContinuousSampling()
         {
-            if (!_continuousConvertionstarted)
-            {
-                throw new InvalidOperationException();
-            }
+            CheckIfContinuousConversionIsStarted(true);
 
             NativeStoptContinuousConversion();
 
             // update flag
             _continuousConvertionstarted = false;
 
+        }
+
+
+        private void CheckIfContinuousConversionIsStarted(bool invertCheck = false)
+        {
+            if (invertCheck ? !_continuousConvertionstarted : _continuousConvertionstarted)
+            {
+                throw new InvalidOperationException();
+            }
         }
 
         #region Native Calls
@@ -207,6 +208,9 @@ namespace nanoFramework.GiantGecko.Adc
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern bool NativeStoptContinuousConversion();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern int[] NativeGetLastScanSamples();
 
         #endregion
     }
