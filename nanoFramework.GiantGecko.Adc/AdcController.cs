@@ -57,7 +57,8 @@ namespace nanoFramework.GiantGecko.Adc
         /// <exception cref="InvalidOperationException">The ADC is not performing a scan operation. This has to be started with a call to <see cref="StartContinuousSampling"/> or <see cref="StartAveragedContinuousSampling"/>.</exception>
         /// <remarks>
         /// <para>
-        /// The values are either the last sample value (if started with <see cref="StartContinuousSampling"/>) or the average of the last samples count (if the averaged continuous scan was started with <see cref="StartAveragedContinuousSampling"/>).
+        /// The values are either the last sample value (if started with <see cref="StartContinuousSampling"/>) or the average of the last samples count (if the averaged continuous scan was started with <see cref="StartAveragedContinuousSampling"/>). 
+        /// The array is indexed by the position of the channel in the array passed to <see cref="StartContinuousSampling"/> or <see cref="StartAveragedContinuousSampling"/>. For example, if <see cref="StartContinuousSampling"/>([channel_idda, channel_idd3_3]) was called, then <see cref="LastScanSamples">[0]</see> would have value for channel_idda and <see cref="LastScanSamples"/>[1] would have value for channel_idd3_3. The last continuous sample for a channel may also be retrieved from <see cref="AdcChannel.LastSampleValue"/>.
         /// </para>
         /// <para>
         /// Please see remarks on <see cref="StartContinuousSampling"/> and <see cref="StartAveragedContinuousSampling"/> for more information on continuous sampling.
@@ -191,7 +192,7 @@ namespace nanoFramework.GiantGecko.Adc
 
         /// <summary>
         /// Gets last sample value for the specified channel index.
-        /// This index refers to the index of the channel when it was passed to <see cref="StartContinuousSampling"/> or <see cref="StartAveragedContinuousSampling"/>.
+        /// This index refers to the position of the channel in the array passed to <see cref="StartContinuousSampling"/> or <see cref="StartAveragedContinuousSampling"/>.
         /// </summary>
         /// <param name="channel"></param>
         /// <returns></returns>
