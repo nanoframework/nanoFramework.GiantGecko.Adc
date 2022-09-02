@@ -18,14 +18,9 @@ namespace nanoFramework.GiantGecko.Adc
         private SampleResolution _sampleResolution = SampleResolution._12bits;
         private AdcChannelMode _channelMode = AdcChannelMode.SingleEnded;
 
-        // TODO: explain remark below
-
         /// <summary>
         /// Peripheral reflex system trigger selection.
         /// </summary>
-        /// <remarks>
-        /// Only applicable if prsEnable is enabled.
-        /// </remarks>
         public PrsSampleTrigger PrsSampleTrigger { get => _prsSampleTrigger; set => _prsSampleTrigger = value; }
 
         /// <summary>
@@ -52,7 +47,7 @@ namespace nanoFramework.GiantGecko.Adc
         public AdcChannelMode ChannelMode { get => _channelMode; set => _channelMode = value; }
 
         /// <summary>
-        /// Returns whether the peripheral reflex system trigger is enable, based on the PrsSampleTrigger setting.
+        /// Returns whether the peripheral reflex system trigger is enable, based on the <see cref="PrsSampleTrigger"/> setting.
         /// </summary>
         public bool IsPrsEnabled => _prsSampleTrigger > PrsSampleTrigger.Disabled;
     }

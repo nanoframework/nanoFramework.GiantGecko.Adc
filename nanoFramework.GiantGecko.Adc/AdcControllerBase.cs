@@ -46,8 +46,8 @@ namespace System.Device.Adc
         /// Gets the resolution(s) of the controller as number of bits it has. For example, if we have a 10-bit ADC, that means it can detect 1024 (2^10) discrete levels.
         /// </summary>
         /// <value>
-        /// The number of bits the <see cref="AdcController"/> has support for.
+        /// Array with the resolution(s) that the ADC has support for.
         /// </value>
-        public abstract SampleResolution SupportedResolutionsInBits { get; }
+        public abstract SampleResolution[] SupportedResolutionsInBits { get; }
     }
 }

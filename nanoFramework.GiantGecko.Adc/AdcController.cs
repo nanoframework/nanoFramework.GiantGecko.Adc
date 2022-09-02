@@ -38,7 +38,7 @@ namespace nanoFramework.GiantGecko.Adc
         }
 
         /// <inheritdoc/>
-        public override SampleResolution SupportedResolutionsInBits
+        public override SampleResolution[] SupportedResolutionsInBits
         {
             get
             {
@@ -63,9 +63,9 @@ namespace nanoFramework.GiantGecko.Adc
         }
 
         /// <summary>
-        /// Returns true if the ADC is currently running in scan mode, started via <see cref="StartContinuousConversion"/> or <see cref="StartAveragedContinuousConversion"/>.
+        /// Returns <see langword="true"/> if the ADC is currently running in scan mode, started via <see cref="StartContinuousConversion"/> or <see cref="StartAveragedContinuousConversion"/>. <see langword="false"/> otherwise.
         /// </summary>
-        public bool IsScanRunning => throw new NotImplementedException();
+        public bool IsScanRunning => _continuousConvertionstarted;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AdcController"/> class. 
@@ -151,7 +151,7 @@ namespace nanoFramework.GiantGecko.Adc
         /// </remarks>
         /// <param name="channels">Array of channels to scan performing continuous conversions.</param>
         /// <param name="count">Number of samples to take for averaging.</param>
-        /// <returns>TODO</returns>
+        /// <returns><see langword="true"/> if the continuous conversion was successfully started. <see langword="false"/> otherwise.</returns>
         /// <exception cref="InvalidOperationException"></exception>
         public bool StartAveragedContinuousConversion(AdcChannel[] channels, int count)
         {
@@ -202,7 +202,7 @@ namespace nanoFramework.GiantGecko.Adc
         private extern bool NativeIsChannelModeSupported(int mode);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private extern SampleResolution NativeGetSupportedResolutionsInBits();
+        private extern SampleResolution[] NativeGetSupportedResolutionsInBits();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern bool NativeStartContinuousConversion();

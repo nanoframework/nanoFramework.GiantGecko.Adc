@@ -29,8 +29,6 @@ namespace nanoFramework.GiantGecko.Adc
         private int _averageCount;
 #pragma warning restore IDE0052 // Remove unread private members
 
-        // TODO: is my update to the summary correct? Perhaps something low level enforces these properties becoming R/O after AdcChannel is constructed?
-
         /// <summary>
         /// The initialized configuration for this <see cref="AdcChannel"/>. Any changes made
         /// to properties in this object will be ignored: <see cref="AdcChannelConfiguration"/> 
