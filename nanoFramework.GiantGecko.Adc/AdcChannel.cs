@@ -27,6 +27,7 @@ namespace nanoFramework.GiantGecko.Adc
         private readonly int _channelNumber;
         private readonly AdcChannelConfiguration _adcChannelConfiguration;
         private int _averageCount;
+        private int _lastSampleValue;
 #pragma warning restore IDE0052 // Remove unread private members
 
         /// <summary>
@@ -35,6 +36,11 @@ namespace nanoFramework.GiantGecko.Adc
         /// properties must be defined before calling <see cref="AdcController.OpenChannel(int, AdcChannelConfiguration)"/>.
         /// </summary>
         public AdcChannelConfiguration AdcChannelConfiguration => _adcChannelConfiguration;
+
+        /// <summary>
+        /// The value of the last sample read from this channel.
+        /// </summary>
+        public int LastSampleValue => _lastSampleValue;
 
         internal AdcChannel(
             AdcController controller,
