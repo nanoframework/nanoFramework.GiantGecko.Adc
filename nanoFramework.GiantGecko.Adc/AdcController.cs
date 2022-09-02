@@ -52,18 +52,17 @@ namespace nanoFramework.GiantGecko.Adc
         public AdcConfiguration AcdConfiguration => _acdConfiguration;
 
         /// <summary>
-        /// Gets an array with the last conversions from an ongoing scan operation.
+        /// Gets an array with the last samples from an ongoing scan operation.
         /// </summary>
-        /// <exception cref="InvalidOperationException">The ADC is not performing a scan operation. This as to be started with a call to <see cref="StartContinuousConversion"/> or <see cref="StartAveragedContinuousConversion"/>.</exception>
-        /// <remarks>The values are either the last conversion (if started with <see cref="StartContinuousConversion"/>) or the average of the last conversion count (if the averaged continuous scan was started with <see cref="StartAveragedContinuousConversion"/>).</remarks>
-        public int[] LastScanConversions
+        /// <exception cref="InvalidOperationException">The ADC is not performing a scan operation. This has to be started with a call to <see cref="StartContinuousSampling"/> or <see cref="StartAveragedContinuousSampling"/>.</exception>
+        /// <remarks>The values are either the last sample value (if started with <see cref="StartContinuousSampling"/>) or the average of the last samples count (if the averaged continuous scan was started with <see cref="StartAveragedContinuousSampling"/>).</remarks>
         {
             [MethodImpl(MethodImplOptions.InternalCall)]
             get;
         }
 
         /// <summary>
-        /// Returns <see langword="true"/> if the ADC is currently running in scan mode, started via <see cref="StartContinuousConversion"/> or <see cref="StartAveragedContinuousConversion"/>. <see langword="false"/> otherwise.
+        /// Returns <see langword="true"/> if the ADC is currently running in scan mode, started via <see cref="StartContinuousSampling"/> or <see cref="StartAveragedContinuousSampling"/>. <see langword="false"/> otherwise.
         /// </summary>
         public bool IsScanRunning => _continuousConvertionstarted;
 
@@ -121,12 +120,11 @@ namespace nanoFramework.GiantGecko.Adc
         }
 
         /// <summary>
-        /// Starts continuous conversions on the specified channels.
+        /// Starts continuous sampling on the specified channels.
         /// </summary>
-        /// <param name="channels">Array of channels to scan performing continuous conversions.</param>
+        /// <param name="channels">Array of channels to scan performing continuous sampling.</param>
         /// <returns><see langword="true"/> if the operation was successful. <see langword="false"/> otherwise.</returns>
-        /// <exception cref="InvalidOperationException">If a previous continuous conversion operation has been started previously without being stopped.</exception>
-        public bool StartContinuousConversion(AdcChannel[] channels)
+        /// <exception cref="InvalidOperationException">If a previous continuous sampling operation has been started previously without being stopped.</exception>
         {
             if (_continuousConvertionstarted)
             {
@@ -144,16 +142,16 @@ namespace nanoFramework.GiantGecko.Adc
         }
 
         /// <summary>
-        /// Starts continuous conversions and average the digital representation of <paramref name="count"/> analog values read from the ADC.
+        /// Starts continuous sampling and average the digital representation of <paramref name="count"/> analog values read from the ADC.
         /// </summary>
         /// <remarks>
         /// In this mode, the last count samples are averaged and made available in LastScanConversion[0].
         /// </remarks>
-        /// <param name="channels">Array of channels to scan performing continuous conversions.</param>
+        /// <param name="channels">Array of channels to scan performing continuous sampling.</param>
         /// <param name="count">Number of samples to take for averaging.</param>
-        /// <returns><see langword="true"/> if the continuous conversion was successfully started. <see langword="false"/> otherwise.</returns>
+        /// <returns><see langword="true"/> if the continuous sampling was successfully started. <see langword="false"/> otherwise.</returns>
         /// <exception cref="InvalidOperationException"></exception>
-        public bool StartAveragedContinuousConversion(AdcChannel[] channels, int count)
+        public bool StartAveragedContinuousSampling(AdcChannel[] channels, int count)
         {
             if (_continuousConvertionstarted)
             {
@@ -170,10 +168,10 @@ namespace nanoFramework.GiantGecko.Adc
         }
 
         /// <summary>
-        /// Stops an ongoing continuous conversion scan operation.
+        /// Stops an ongoing continuous sampling operation.
         /// </summary>
-        /// <exception cref="InvalidOperationException">If there is no ongoing continuous conversion operation.</exception>
-        public void StoptContinuousConversion()
+        /// <exception cref="InvalidOperationException">If there is no ongoing continuous sampling operation.</exception>
+        public void StopContinuousSampling()
         {
             if (!_continuousConvertionstarted)
             {
