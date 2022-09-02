@@ -56,9 +56,14 @@ namespace nanoFramework.GiantGecko.Adc
         /// </summary>
         /// <exception cref="InvalidOperationException">The ADC is not performing a scan operation. This has to be started with a call to <see cref="StartContinuousSampling"/> or <see cref="StartAveragedContinuousSampling"/>.</exception>
         /// <remarks>The values are either the last sample value (if started with <see cref="StartContinuousSampling"/>) or the average of the last samples count (if the averaged continuous scan was started with <see cref="StartAveragedContinuousSampling"/>).</remarks>
+        public int[] LastScanSamples
         {
-            [MethodImpl(MethodImplOptions.InternalCall)]
-            get;
+            get
+            {
+                CheckIfContinuousConversionIsStarted();
+
+                return NativeGetLastScanSamples();
+            }
         }
 
         /// <summary>
