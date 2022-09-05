@@ -29,6 +29,7 @@ namespace System.Device.Adc
         /// <param name="channelNumber">
         /// The channel to connect to.
         /// </param>
+        /// <param name="configuration">Initial configuration for ADC channel.</param>
         /// <returns>
         /// The ADC channel.
         /// </returns>

@@ -24,7 +24,7 @@ namespace nanoFramework.GiantGecko.Adc
         private readonly object _syncLock;
         private AdcChannel[] _scanChannels;
         private int _averageCount;
-        private bool _continuousConvertionstarted;
+        private bool _continuousSamplingStarted;
 
         private readonly AdcConfiguration _acdConfiguration;
 
@@ -58,26 +58,26 @@ namespace nanoFramework.GiantGecko.Adc
         /// <remarks>
         /// <para>
         /// The values are either the last sample value (if started with <see cref="StartContinuousSampling"/>) or the average of the last samples count (if the averaged continuous scan was started with <see cref="StartAveragedContinuousSampling"/>). 
-        /// The array is indexed by the position of the channel in the array passed to <see cref="StartContinuousSampling"/> or <see cref="StartAveragedContinuousSampling"/>. For example, if <see cref="StartContinuousSampling"/>([channel_idda, channel_idd3_3]) was called, then <see cref="LastScanSamples">[0]</see> would have value for channel_idda and <see cref="LastScanSamples"/>[1] would have value for channel_idd3_3. The last continuous sample for a channel may also be retrieved from <see cref="AdcChannel.LastSampleValue"/>.
+        /// The array is indexed by the position of the channel in the array passed to <see cref="StartContinuousSampling"/> or <see cref="StartAveragedContinuousSampling"/>. For example, if <see cref="StartContinuousSampling"/>([channel_idda, channel_idd3_3]) was called, then <see cref="LastContinuousSamples">[0]</see> would have value for channel_idda and <see cref="LastContinuousSamples"/>[1] would have value for channel_idd3_3. The last continuous sample for a channel may also be retrieved from <see cref="AdcChannel.LastContinuousValue"/>.
         /// </para>
         /// <para>
         /// Please see remarks on <see cref="StartContinuousSampling"/> and <see cref="StartAveragedContinuousSampling"/> for more information on continuous sampling.
         /// </para>
         /// </remarks>
-        public int[] LastScanSamples
+        public int[] LastContinuousSamples
         {
             get
             {
-                CheckIfContinuousConversionIsStarted();
+                CheckIfContinuousSamplingIsStarted();
 
-                return NativeGetLastScanSamples();
+                return NativeGetLastContinuousSamples();
             }
         }
 
         /// <summary>
         /// Returns <see langword="true"/> if the ADC is currently running in scan mode, started via <see cref="StartContinuousSampling"/> or <see cref="StartAveragedContinuousSampling"/>. <see langword="false"/> otherwise.
         /// </summary>
-        public bool IsScanRunning => _continuousConvertionstarted;
+        public bool IsContinuousSamplingRunning => _continuousSamplingStarted;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AdcController"/> class. 
@@ -140,16 +140,16 @@ namespace nanoFramework.GiantGecko.Adc
         /// <exception cref="InvalidOperationException">If a previous continuous sampling operation has been started previously without being stopped.</exception>
         public bool StartContinuousSampling(AdcChannel[] channels)
         {
-            CheckIfContinuousConversionIsStarted();
+            CheckIfContinuousSamplingIsStarted();
 
             _scanChannels = channels;
             // set average count to 1 for single sample
             _averageCount = 1;
 
             // update flag
-            _continuousConvertionstarted = NativeStartContinuousConversion();
+            _continuousSamplingStarted = NativeStartContinuousConversion();
 
-            return _continuousConvertionstarted;
+            return _continuousSamplingStarted;
         }
 
         /// <summary>
@@ -164,15 +164,15 @@ namespace nanoFramework.GiantGecko.Adc
         /// <exception cref="InvalidOperationException"></exception>
         public bool StartAveragedContinuousSampling(AdcChannel[] channels, int count)
         {
-            CheckIfContinuousConversionIsStarted();
+            CheckIfContinuousSamplingIsStarted();
 
             _scanChannels = channels;
             _averageCount = count;
 
             // update flag
-            _continuousConvertionstarted = NativeStartContinuousConversion();
+            _continuousSamplingStarted = NativeStartContinuousConversion();
 
-            return _continuousConvertionstarted;
+            return _continuousSamplingStarted;
         }
 
         /// <summary>
@@ -181,38 +181,18 @@ namespace nanoFramework.GiantGecko.Adc
         /// <exception cref="InvalidOperationException">If there is no ongoing continuous sampling operation.</exception>
         public void StopContinuousSampling()
         {
-            CheckIfContinuousConversionIsStarted(true);
+            CheckIfContinuousSamplingIsStarted(true);
 
             NativeStoptContinuousConversion();
 
             // update flag
-            _continuousConvertionstarted = false;
+            _continuousSamplingStarted = false;
 
         }
 
-        /// <summary>
-        /// Gets last sample value for the specified channel index.
-        /// This index refers to the position of the channel in the array passed to <see cref="StartContinuousSampling"/> or <see cref="StartAveragedContinuousSampling"/>.
-        /// </summary>
-        /// <param name="channel"></param>
-        /// <returns></returns>
-        /// <exception cref="InvalidOperationException">The ADC is not performing a scan operation. This has to be started with a call to <see cref="StartContinuousSampling"/> or <see cref="StartAveragedContinuousSampling"/>.</exception>
-        /// <remarks>
-        /// <para>
-        /// The values are either the last sample value (if started with <see cref="StartContinuousSampling"/>) or the average of the last samples count (if the averaged continuous scan was started with <see cref="StartAveragedContinuousSampling"/>).
-        /// </para>
-        /// <para>
-        /// Please see remarks on <see cref="StartContinuousSampling"/> and <see cref="StartAveragedContinuousSampling"/> for more information on continuous sampling.
-        /// </para>
-        /// </remarks>
-        public int GetLastContinuousSample(int channel)
+        private void CheckIfContinuousSamplingIsStarted(bool invertCheck = false)
         {
-            return NativeGetLastScanSampleForChannel(channel);
-        }
-
-        private void CheckIfContinuousConversionIsStarted(bool invertCheck = false)
-        {
-            if (invertCheck ? !_continuousConvertionstarted : _continuousConvertionstarted)
+            if (invertCheck ? !_continuousSamplingStarted : _continuousSamplingStarted)
             {
                 throw new InvalidOperationException();
             }
@@ -242,7 +222,7 @@ namespace nanoFramework.GiantGecko.Adc
         private extern bool NativeStoptContinuousConversion();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private extern int[] NativeGetLastScanSamples();
+        private extern int[] NativeGetLastContinuousSamples();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern int NativeGetLastScanSampleForChannel(int channel);
