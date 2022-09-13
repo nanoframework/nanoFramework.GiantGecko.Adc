@@ -29,6 +29,7 @@ namespace System.Device.Adc
         /// <param name="channelNumber">
         /// The channel to connect to.
         /// </param>
+        /// <param name="configuration">Initial configuration for ADC channel.</param>
         /// <returns>
         /// The ADC channel.
         /// </returns>
@@ -43,29 +44,11 @@ namespace System.Device.Adc
         public abstract int ChannelCount { get; }
 
         /// <summary>
-        /// Gets or sets the channel mode for the <see cref="AdcController"/>.
-        /// </summary>
-        /// <value>
-        /// The mode for the <see cref="AdcChannel"/>.
-        /// </value>
-        /// <exception cref="PlatformNotSupportedException">If the platform doesn't have this configuration available.</exception>
-        public abstract AdcChannelMode ChannelMode { get; set; }
-
-        /// <summary>
         /// Gets the resolution(s) of the controller as number of bits it has. For example, if we have a 10-bit ADC, that means it can detect 1024 (2^10) discrete levels.
         /// </summary>
         /// <value>
-        /// The number of bits the <see cref="AdcController"/> has support for.
+        /// Array with the resolution(s) that the ADC has support for.
         /// </value>
-        public abstract SampleResolution SupportedResolutionsInBits { get; }
-
-        /// <summary>
-        /// Gets or sets the resolution of the controller as number of bits it has.
-        /// </summary>
-        /// <value>
-        /// The number of bits the <see cref="AdcController"/> will use to perform conversions.
-        /// </value>
-        /// <exception cref="InvalidOperationException">If trying to change the resolution when a continuous conversion operation has been started.</exception>
-        public abstract SampleResolution ResolutionInBits { get; set; }
+        public abstract SampleResolution[] SupportedResolutionsInBits { get; }
     }
 }

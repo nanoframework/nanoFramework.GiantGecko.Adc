@@ -30,19 +30,21 @@ namespace nanoFramework.GiantGecko.Adc
 #pragma warning restore IDE0052 // Remove unread private members
 
         /// <summary>
-        /// Initialization configuration for <see cref="AdcChannel"/>.
+        /// The initialized configuration for this <see cref="AdcChannel"/>. Any changes made
+        /// to properties in this object will be ignored: <see cref="AdcChannelConfiguration"/> 
+        /// properties must be defined before calling <see cref="AdcController.OpenChannel(int, AdcChannelConfiguration)"/>.
         /// </summary>
         public AdcChannelConfiguration AdcChannelConfiguration => _adcChannelConfiguration;
 
-        internal AdcChannel(
-            AdcController controller,
-            int channelNumber)
+        /// <summary>
+        /// The last value read in continuous sample mode started via <see cref="AdcController.StartContinuousSampling"/>() or, if averaged sampling continuous mode is currently in use via <see cref="AdcController.StartAveragedContinuousSampling"/>(), the latest averaged value.
+        /// It is an error to read this property if the channel is not currently in continuous mode.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">When reading from this property when the is not currently in continuous mode.</exception>
+        public extern int LastContinuousValue
         {
-            _adcController = controller;
-            _channelNumber = channelNumber;
-            _adcChannelConfiguration = default;
-
-            _syncLock = new object();
+            [MethodImpl(MethodImplOptions.InternalCall)]
+            get;
         }
 
         internal AdcChannel(
