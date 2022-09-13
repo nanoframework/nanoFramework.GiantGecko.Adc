@@ -19,6 +19,9 @@ trigger:
       - assets/*
       - config/*
       - .github/*
+  tags:
+    include: 
+      - v*
 
 # PR always trigger build
 pr:
