@@ -4,7 +4,7 @@
 
 -----
 
-# Welcome to the .NET **nanoFramework** nanoFramework.GiantGecko.Adc repository
+# Welcome to the .NET **nanoFramework** GiantGecko.Adc repository
 
 ## Build status
 
@@ -13,7 +13,6 @@
 | nanoFramework.GiantGecko.Adc | [![Build Status](https://dev.azure.com/nanoframework/nanoFramework.GiantGecko.Adc/_apis/build/status/nanoFramework.GiantGecko.Adc?branchName=main)](https://dev.azure.com/nanoframework/nanoFramework.GiantGecko.Adc/_build/latest?definitionId=98&branchName=main) | [![NuGet](https://img.shields.io/nuget/v/nanoFramework.GiantGecko.Adc.svg?label=NuGet&style=flat&logo=nuget)](https://www.nuget.org/packages/nanoFramework.GiantGecko.Adc/) |
 
 ## Usage
-
 
 ## Feedback and documentation
 
