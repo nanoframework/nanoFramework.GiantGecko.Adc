@@ -26,7 +26,6 @@ namespace nanoFramework.GiantGecko.Adc
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
         private readonly int _channelNumber;
         private readonly AdcChannelConfiguration _adcChannelConfiguration;
-        private int _averageCount;
 #pragma warning restore IDE0052 // Remove unread private members
 
         /// <summary>
@@ -71,9 +70,7 @@ namespace nanoFramework.GiantGecko.Adc
                 }
 
                 // set average count to 1 for single sample
-                _averageCount = 1;
-
-                return NativeReadValue();
+                return NativeReadValue(1);
             }
         }
 
@@ -88,9 +85,7 @@ namespace nanoFramework.GiantGecko.Adc
                     throw new ObjectDisposedException();
                 }
 
-                _averageCount = count;
-
-                return NativeReadValue();
+                return NativeReadValue(count);
             }
         }
 
@@ -138,7 +133,7 @@ namespace nanoFramework.GiantGecko.Adc
         #region Native Calls
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private extern int NativeReadValue();
+        private extern int NativeReadValue(int count);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern void NativeDisposeChannel();

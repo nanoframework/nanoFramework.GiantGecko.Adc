@@ -26,7 +26,7 @@ namespace nanoFramework.GiantGecko.Adc
         private int _averageCount;
         private bool _continuousSamplingStarted;
 
-        private readonly AdcConfiguration _acdConfiguration;
+        private readonly AdcConfiguration _adcConfiguration;
 
         /// <inheritdoc/>
         public override int ChannelCount
@@ -49,7 +49,7 @@ namespace nanoFramework.GiantGecko.Adc
         /// <summary>
         /// Initialization configuration for <see cref="AdcController"/>.
         /// </summary>
-        public AdcConfiguration AcdConfiguration => _acdConfiguration;
+        public AdcConfiguration AcdConfiguration => _adcConfiguration;
 
         /// <summary>
         /// Gets an array with the last samples from an ongoing scan operation.
@@ -101,7 +101,7 @@ namespace nanoFramework.GiantGecko.Adc
             // check if this device is already opened
             if (_syncLock == null)
             {
-                _acdConfiguration = acdInitialization;
+                _adcConfiguration = acdInitialization;
 
                 // call native init to allow HAL/PAL inits related with ADC hardware
                 // this is also used to check if the requested ADC actually exists
