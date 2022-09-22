@@ -135,12 +135,11 @@ namespace nanoFramework.GiantGecko.Adc
         /// Starts continuous sampling on the specified channels using the default <see cref="AdcChannelConfiguration"/>.
         /// </summary>
         /// <param name="channels">Array of channels indexes to scan performing continuous sampling.</param>
-        /// <returns><see langword="true"/> if the operation was successful. <see langword="false"/> otherwise.</returns>
         /// <exception cref="InvalidOperationException">If a previous continuous sampling operation has been started previously without being stopped.</exception>
         /// <exception cref="ArgumentException">If the specified channel index does not exist.</exception>
-        public bool StartContinuousSampling(int[] channels)
+        public void StartContinuousSampling(int[] channels)
         {
-            return StartContinuousSampling(
+            StartContinuousSampling(
                 channels,
                 new AdcChannelConfiguration());
         }
@@ -150,10 +149,9 @@ namespace nanoFramework.GiantGecko.Adc
         /// </summary>
         /// <param name="channels">Array of channels indexes to scan performing continuous sampling.</param>
         /// <param name="configuration">Initial configuration for the various ADC channels.</param>
-        /// <returns><see langword="true"/> if the operation was successful. <see langword="false"/> otherwise.</returns>
         /// <exception cref="InvalidOperationException">If a previous continuous sampling operation has been started previously without being stopped.</exception>
         /// <exception cref="ArgumentException">If the specified channel index does not exist.</exception>
-        public bool StartContinuousSampling(
+        public void StartContinuousSampling(
             int[] channels,
             AdcChannelConfiguration configuration)
         {
@@ -162,12 +160,10 @@ namespace nanoFramework.GiantGecko.Adc
             _adcChannelConfiguration = configuration;
 
             // set average count to 1 for single sample
-            // update flag upon successful start
-            _continuousSamplingStarted = NativeStartContinuousConversion(
-                channels,
-                1);
-
-            return _continuousSamplingStarted;
+            // flag is updated in native code upon successful start
+            NativeStartContinuousConversion(
+                            channels,
+                            1);
         }
 
         /// <summary>
@@ -181,11 +177,11 @@ namespace nanoFramework.GiantGecko.Adc
         /// <returns><see langword="true"/> if the continuous sampling was successfully started. <see langword="false"/> otherwise.</returns>
         /// <exception cref="InvalidOperationException"></exception>
         /// <exception cref="ArgumentException">If the specified channel index does not exist.</exception>
-        public bool StartAveragedContinuousSampling(
+        public void StartAveragedContinuousSampling(
             int[] channels,
             int count)
         {
-            return StartAveragedContinuousSampling(
+            StartAveragedContinuousSampling(
                 channels,
                 new AdcChannelConfiguration(),
                 count);
@@ -203,7 +199,7 @@ namespace nanoFramework.GiantGecko.Adc
         /// <returns><see langword="true"/> if the continuous sampling was successfully started. <see langword="false"/> otherwise.</returns>
         /// <exception cref="InvalidOperationException"></exception>
         /// <exception cref="ArgumentException">If the specified channel index does not exist.</exception>
-        public bool StartAveragedContinuousSampling(
+        public void StartAveragedContinuousSampling(
             int[] channels,
             AdcChannelConfiguration configuration,
             int count)
@@ -214,7 +210,7 @@ namespace nanoFramework.GiantGecko.Adc
 
             // set average count to 1 for single sample
             // flag is updated in native code upon successful start
-            return NativeStartContinuousConversion(
+            NativeStartContinuousConversion(
                 channels,
                 count);
         }
@@ -257,7 +253,7 @@ namespace nanoFramework.GiantGecko.Adc
         private extern SampleResolution[] NativeGetSupportedResolutionsInBits();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private extern bool NativeStartContinuousConversion(
+        private extern void NativeStartContinuousConversion(
             int[] channels,
             int count);
 
