@@ -22,7 +22,7 @@ namespace nanoFramework.GiantGecko.Adc
         // a lock is required because multiple threads can access the AdcController
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
         private readonly object _syncLock;
-        private bool _continuousSamplingStarted;
+        internal bool _continuousSamplingStarted;
 
         private readonly AdcConfiguration _adcConfiguration;
         private AdcChannelConfiguration _adcChannelConfiguration;

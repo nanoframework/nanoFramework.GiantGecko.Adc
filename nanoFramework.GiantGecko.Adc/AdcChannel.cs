@@ -59,6 +59,7 @@ namespace nanoFramework.GiantGecko.Adc
         }
 
         /// <inheritdoc/>
+        /// <exception cref="InvalidOperationException">If a continuous conversion is ongoing in the <see cref="AdcController"/>.</exception>
         public override int ReadValue()
         {
             lock (_syncLock)
@@ -69,12 +70,19 @@ namespace nanoFramework.GiantGecko.Adc
                     throw new ObjectDisposedException();
                 }
 
+                // can't read a channel when performing continuous conversion
+                if (_adcController._continuousSamplingStarted)
+                {
+                    throw new InvalidOperationException();
+                }
+
                 // set average count to 1 for single sample
                 return NativeReadValue(1);
             }
         }
 
         /// <inheritdoc/>
+        /// <exception cref="InvalidOperationException">If a continuous conversion is ongoing in the <see cref="AdcController"/>.</exception>
         public override int ReadValueAveraged(int count)
         {
             lock (_syncLock)
@@ -83,6 +91,12 @@ namespace nanoFramework.GiantGecko.Adc
                 if (_disposed)
                 {
                     throw new ObjectDisposedException();
+                }
+
+                // can't read a channel when performing continuous conversion
+                if (_adcController._continuousSamplingStarted)
+                {
+                    throw new InvalidOperationException();
                 }
 
                 return NativeReadValue(count);
