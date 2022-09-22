@@ -263,9 +263,6 @@ namespace nanoFramework.GiantGecko.Adc
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern int[] NativeGetLastContinuousSamples();
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private extern int NativeGetLastScanSampleForChannel(int channel);
-
         #endregion
     }
 }
