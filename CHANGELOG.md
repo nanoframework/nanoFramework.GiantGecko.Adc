@@ -2,7 +2,15 @@
 
 ## [**Changes available only in 'Preview' NuGet packages:**](https://github.com/nanoframework/nanoFramework.GiantGecko.Adc/tree/HEAD)
 
-[Full Changelog](https://github.com/nanoframework/nanoFramework.GiantGecko.Adc/compare/v1.0.14...HEAD)
+[Full Changelog](https://github.com/nanoframework/nanoFramework.GiantGecko.Adc/compare/v1.0.18...HEAD)
+
+**Implemented enhancements:**
+
+- Rework start and stop continuous conversion [\#6](https://github.com/nanoframework/nanoFramework.GiantGecko.Adc/pull/6)
+
+## [v1.0.18](https://github.com/nanoframework/nanoFramework.GiantGecko.Adc/tree/v1.0.18) (2022-09-22)
+
+[Full Changelog](https://github.com/nanoframework/nanoFramework.GiantGecko.Adc/compare/v1.0.14...v1.0.18)
 
 **Implemented enhancements:**
 
