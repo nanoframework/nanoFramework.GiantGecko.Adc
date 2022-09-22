@@ -2,7 +2,20 @@
 
 ## [**Changes available only in 'Preview' NuGet packages:**](https://github.com/nanoframework/nanoFramework.GiantGecko.Adc/tree/HEAD)
 
-[Full Changelog](https://github.com/nanoframework/nanoFramework.GiantGecko.Adc/compare/v1.0.20...HEAD)
+[Full Changelog](https://github.com/nanoframework/nanoFramework.GiantGecko.Adc/compare/v1.0.22...HEAD)
+
+**Implemented enhancements:**
+
+- Improve exception messages [\#10](https://github.com/nanoframework/nanoFramework.GiantGecko.Adc/pull/10)
+- Read value methods now check for ongoing continuous operation [\#8](https://github.com/nanoframework/nanoFramework.GiantGecko.Adc/pull/8)
+
+**Documentation and other chores:**
+
+- Remove LastContinuousValue method from AdcChannel [\#9](https://github.com/nanoframework/nanoFramework.GiantGecko.Adc/pull/9)
+
+## [v1.0.22](https://github.com/nanoframework/nanoFramework.GiantGecko.Adc/tree/v1.0.22) (2022-09-22)
+
+[Full Changelog](https://github.com/nanoframework/nanoFramework.GiantGecko.Adc/compare/v1.0.20...v1.0.22)
 
 **Implemented enhancements:**
 
