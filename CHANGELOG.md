@@ -2,7 +2,15 @@
 
 ## [**Changes available only in 'Preview' NuGet packages:**](https://github.com/nanoframework/nanoFramework.GiantGecko.Adc/tree/HEAD)
 
-[Full Changelog](https://github.com/nanoframework/nanoFramework.GiantGecko.Adc/compare/v1.0.18...HEAD)
+[Full Changelog](https://github.com/nanoframework/nanoFramework.GiantGecko.Adc/compare/v1.0.20...HEAD)
+
+**Implemented enhancements:**
+
+- Rework StartContinuousSampling and StartAveragedContinuousSampling [\#7](https://github.com/nanoframework/nanoFramework.GiantGecko.Adc/pull/7)
+
+## [v1.0.20](https://github.com/nanoframework/nanoFramework.GiantGecko.Adc/tree/v1.0.20) (2022-09-22)
+
+[Full Changelog](https://github.com/nanoframework/nanoFramework.GiantGecko.Adc/compare/v1.0.18...v1.0.20)
 
 **Implemented enhancements:**
 
