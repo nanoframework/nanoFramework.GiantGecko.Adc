@@ -22,12 +22,10 @@ namespace nanoFramework.GiantGecko.Adc
         // a lock is required because multiple threads can access the AdcController
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
         private readonly object _syncLock;
-#pragma warning disable IDE0052 // required in native driver
-        private AdcChannel[] _scanChannels;
-#pragma warning restore IDE0052 // Remove unread private members
         private bool _continuousSamplingStarted;
 
         private readonly AdcConfiguration _adcConfiguration;
+        private AdcChannelConfiguration _adcChannelConfiguration;
 
         /// <inheritdoc/>
         public override int ChannelCount
@@ -134,22 +132,38 @@ namespace nanoFramework.GiantGecko.Adc
         }
 
         /// <summary>
-        /// Starts continuous sampling on the specified channels.
+        /// Starts continuous sampling on the specified channels using the default <see cref="AdcChannelConfiguration"/>.
         /// </summary>
-        /// <param name="channels">Array of channels to scan performing continuous sampling.</param>
-        /// <returns><see langword="true"/> if the operation was successful. <see langword="false"/> otherwise.</returns>
+        /// <param name="channels">Array of channels indexes to scan performing continuous sampling.</param>
         /// <exception cref="InvalidOperationException">If a previous continuous sampling operation has been started previously without being stopped.</exception>
-        public bool StartContinuousSampling(AdcChannel[] channels)
+        /// <exception cref="ArgumentException">If the specified channel index does not exist.</exception>
+        public void StartContinuousSampling(int[] channels)
+        {
+            StartContinuousSampling(
+                channels,
+                new AdcChannelConfiguration());
+        }
+
+        /// <summary>
+        /// Starts continuous sampling on the specified channels using the specified <see cref="AdcChannelConfiguration"/>.
+        /// </summary>
+        /// <param name="channels">Array of channels indexes to scan performing continuous sampling.</param>
+        /// <param name="configuration">Initial configuration for the various ADC channels.</param>
+        /// <exception cref="InvalidOperationException">If a previous continuous sampling operation has been started previously without being stopped.</exception>
+        /// <exception cref="ArgumentException">If the specified channel index does not exist.</exception>
+        public void StartContinuousSampling(
+            int[] channels,
+            AdcChannelConfiguration configuration)
         {
             CheckIfContinuousSamplingIsStarted();
 
-            _scanChannels = channels;
+            _adcChannelConfiguration = configuration;
 
             // set average count to 1 for single sample
-            // update flag upon successful start
-            _continuousSamplingStarted = NativeStartContinuousConversion(1);
-
-            return _continuousSamplingStarted;
+            // flag is updated in native code upon successful start
+            NativeStartContinuousConversion(
+                            channels,
+                            1);
         }
 
         /// <summary>
@@ -162,15 +176,43 @@ namespace nanoFramework.GiantGecko.Adc
         /// <param name="count">Number of samples to take for averaging.</param>
         /// <returns><see langword="true"/> if the continuous sampling was successfully started. <see langword="false"/> otherwise.</returns>
         /// <exception cref="InvalidOperationException"></exception>
-        public bool StartAveragedContinuousSampling(AdcChannel[] channels, int count)
+        /// <exception cref="ArgumentException">If the specified channel index does not exist.</exception>
+        public void StartAveragedContinuousSampling(
+            int[] channels,
+            int count)
+        {
+            StartAveragedContinuousSampling(
+                channels,
+                new AdcChannelConfiguration(),
+                count);
+        }
+
+        /// <summary>
+        /// Starts continuous sampling and average the digital representation of <paramref name="count"/> analog values read from the ADC.
+        /// </summary>
+        /// <remarks>
+        /// In this mode, the last count samples are averaged and made available in LastScanConversion[0].
+        /// </remarks>
+        /// <param name="channels">Array of channels to scan performing continuous sampling.</param>
+        /// <param name="configuration">Initial configuration for the various ADC channels.</param>
+        /// <param name="count">Number of samples to take for averaging.</param>
+        /// <returns><see langword="true"/> if the continuous sampling was successfully started. <see langword="false"/> otherwise.</returns>
+        /// <exception cref="InvalidOperationException"></exception>
+        /// <exception cref="ArgumentException">If the specified channel index does not exist.</exception>
+        public void StartAveragedContinuousSampling(
+            int[] channels,
+            AdcChannelConfiguration configuration,
+            int count)
         {
             CheckIfContinuousSamplingIsStarted();
 
-            _scanChannels = channels;
+            _adcChannelConfiguration = configuration;
 
             // set average count to 1 for single sample
             // flag is updated in native code upon successful start
-            return NativeStartContinuousConversion(count);
+            NativeStartContinuousConversion(
+                channels,
+                count);
         }
 
         /// <summary>
@@ -211,7 +253,9 @@ namespace nanoFramework.GiantGecko.Adc
         private extern SampleResolution[] NativeGetSupportedResolutionsInBits();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private extern bool NativeStartContinuousConversion(int count);
+        private extern void NativeStartContinuousConversion(
+            int[] channels,
+            int count);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern void NativeStopContinuousConversion();
