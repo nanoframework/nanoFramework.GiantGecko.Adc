@@ -3,7 +3,7 @@
 // See LICENSE file in the project root for full license information.
 //
 
-namespace System.Device.Adc
+namespace nanoFramework.GiantGecko.Adc
 {
     /// <summary>
     /// Describes the channel modes that the <see cref="AdcController"/> can use for input.
