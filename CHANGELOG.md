@@ -2,7 +2,23 @@
 
 ## [**Changes available only in 'Preview' NuGet packages:**](https://github.com/nanoframework/nanoFramework.GiantGecko.Adc/tree/HEAD)
 
-[Full Changelog](https://github.com/nanoframework/nanoFramework.GiantGecko.Adc/compare/v1.0.11...HEAD)
+[Full Changelog](https://github.com/nanoframework/nanoFramework.GiantGecko.Adc/compare/v1.0.14...HEAD)
+
+**Implemented enhancements:**
+
+- Rework StartContinuousSampling [\#5](https://github.com/nanoframework/nanoFramework.GiantGecko.Adc/pull/5)
+
+**Fixed bugs:**
+
+- Fix namespace [\#3](https://github.com/nanoframework/nanoFramework.GiantGecko.Adc/pull/3)
+
+**Documentation and other chores:**
+
+- Update 1 NuGet dependencies [\#4](https://github.com/nanoframework/nanoFramework.GiantGecko.Adc/pull/4)
+
+## [v1.0.14](https://github.com/nanoframework/nanoFramework.GiantGecko.Adc/tree/v1.0.14) (2022-09-20)
+
+[Full Changelog](https://github.com/nanoframework/nanoFramework.GiantGecko.Adc/compare/v1.0.11...v1.0.14)
 
 **Implemented enhancements:**
 
