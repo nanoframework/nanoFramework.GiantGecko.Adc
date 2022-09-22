@@ -62,7 +62,7 @@ namespace nanoFramework.GiantGecko.Adc
                 // can't read a channel when performing continuous conversion
                 if (_adcController._continuousSamplingStarted)
                 {
-                    throw new InvalidOperationException();
+                    throw new InvalidOperationException("Continuous conversion operation in progress.");
                 }
 
                 // set average count to 1 for single sample
@@ -85,7 +85,7 @@ namespace nanoFramework.GiantGecko.Adc
                 // can't read a channel when performing continuous conversion
                 if (_adcController._continuousSamplingStarted)
                 {
-                    throw new InvalidOperationException();
+                    throw new InvalidOperationException("Continuous conversion operation in progress.");
                 }
 
                 return NativeReadValue(count);
