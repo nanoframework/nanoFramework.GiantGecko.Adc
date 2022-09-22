@@ -22,8 +22,9 @@ namespace nanoFramework.GiantGecko.Adc
         // a lock is required because multiple threads can access the AdcController
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
         private readonly object _syncLock;
+#pragma warning disable IDE0052 // required in native driver
         private AdcChannel[] _scanChannels;
-        private int _averageCount;
+#pragma warning restore IDE0052 // Remove unread private members
         private bool _continuousSamplingStarted;
 
         private readonly AdcConfiguration _adcConfiguration;
@@ -143,11 +144,10 @@ namespace nanoFramework.GiantGecko.Adc
             CheckIfContinuousSamplingIsStarted();
 
             _scanChannels = channels;
-            // set average count to 1 for single sample
-            _averageCount = 1;
 
-            // update flag
-            _continuousSamplingStarted = NativeStartContinuousConversion();
+            // set average count to 1 for single sample
+            // update flag upon successful start
+            _continuousSamplingStarted = NativeStartContinuousConversion(1);
 
             return _continuousSamplingStarted;
         }
@@ -167,10 +167,10 @@ namespace nanoFramework.GiantGecko.Adc
             CheckIfContinuousSamplingIsStarted();
 
             _scanChannels = channels;
-            _averageCount = count;
 
-            // update flag
-            _continuousSamplingStarted = NativeStartContinuousConversion();
+            // set average count to 1 for single sample
+            // update flag upon successful start
+            _continuousSamplingStarted = NativeStartContinuousConversion(count);
 
             return _continuousSamplingStarted;
         }
@@ -216,7 +216,7 @@ namespace nanoFramework.GiantGecko.Adc
         private extern SampleResolution[] NativeGetSupportedResolutionsInBits();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private extern bool NativeStartContinuousConversion();
+        private extern bool NativeStartContinuousConversion(int count);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern bool NativeStoptContinuousConversion();
