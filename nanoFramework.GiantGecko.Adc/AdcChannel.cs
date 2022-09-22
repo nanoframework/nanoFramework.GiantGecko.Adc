@@ -35,17 +35,6 @@ namespace nanoFramework.GiantGecko.Adc
         /// </summary>
         public AdcChannelConfiguration AdcChannelConfiguration => _adcChannelConfiguration;
 
-        /// <summary>
-        /// The last value read in continuous sample mode started via <see cref="AdcController.StartContinuousSampling"/>() or, if averaged sampling continuous mode is currently in use via <see cref="AdcController.StartAveragedContinuousSampling"/>(), the latest averaged value.
-        /// It is an error to read this property if the channel is not currently in continuous mode.
-        /// </summary>
-        /// <exception cref="InvalidOperationException">When reading from this property when the is not currently in continuous mode.</exception>
-        public extern int LastContinuousValue
-        {
-            [MethodImpl(MethodImplOptions.InternalCall)]
-            get;
-        }
-
         internal AdcChannel(
             AdcController controller,
             int channelNumber,
