@@ -169,10 +169,8 @@ namespace nanoFramework.GiantGecko.Adc
             _scanChannels = channels;
 
             // set average count to 1 for single sample
-            // update flag upon successful start
-            _continuousSamplingStarted = NativeStartContinuousConversion(count);
-
-            return _continuousSamplingStarted;
+            // flag is updated in native code upon successful start
+            return NativeStartContinuousConversion(count);
         }
 
         /// <summary>
@@ -183,11 +181,8 @@ namespace nanoFramework.GiantGecko.Adc
         {
             CheckIfContinuousSamplingIsStarted(true);
 
-            NativeStoptContinuousConversion();
-
-            // update flag
-            _continuousSamplingStarted = false;
-
+            // flag is updated in native code upon successful start
+            NativeStopContinuousConversion();
         }
 
         private void CheckIfContinuousSamplingIsStarted(bool invertCheck = false)
@@ -219,7 +214,7 @@ namespace nanoFramework.GiantGecko.Adc
         private extern bool NativeStartContinuousConversion(int count);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private extern bool NativeStoptContinuousConversion();
+        private extern void NativeStopContinuousConversion();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern int[] NativeGetLastContinuousSamples();
